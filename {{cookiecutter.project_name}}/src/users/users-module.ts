@@ -3,9 +3,9 @@ import PostgresDB from "../modules/psql";
 
 class Users extends PostgresDB {
     tablename: string;
-    constructor(connectionString: string) {
-        super(connectionString);
-        this.tablename = process.env.USER_TABLE as string;
+    constructor() {
+        super();
+        this.tablename = "user";
         if(!this.tablename) {
             throw new Error("USER_TABLE environment variable is not set.");
         }
@@ -27,10 +27,5 @@ class Users extends PostgresDB {
 
 }
 
-// PSQL_CONNECTION_STRING environment variable contains the connection string for the PostgreSQL database
-const connectionString = process.env.PSQL_CONNECTION_STRING;
-if(!connectionString) {
-  throw new Error("PSQL_CONNECTION_STRING environment variable is not set.");
-}
-const users = new Users(connectionString);
+const users = new Users();
 export default users;

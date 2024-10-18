@@ -66,6 +66,18 @@ Resources:
           Properties:
             Path: /users
             Method: ANY
+        GetUser:
+          Type: Api
+          Properties:
+            Path: /user/{id}
+            Method: GET
+      Policies:
+      - Statement:
+        - Sid: GetSSMParameter
+          Effect: Allow
+          Action:
+            - ssm:GetParameter
+          Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PSQL_CONNECTION_STRING"
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -76,25 +88,28 @@ Resources:
         - index.ts
         External: !Split [" ", !Ref ExternalDependencies]
 
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  NotesApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/notes/"
-  NotesFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt NotesFunction.Arn
-  NotesFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt NotesFunctionRole.Arn
-  UsersApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/users/"
-  UsersFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt UsersFunction.Arn
-  UsersFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt UsersFunctionRole.Arn
+# Outputs:
+#   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+#   # Find out more about other implicit resources you can reference within SAM
+#   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+#   NotesApi:
+#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/notes/"
+#   NotesFunction:
+#     Description: "Hello World Lambda Function ARN"
+#     Value: !GetAtt NotesFunction.Arn
+#   NotesFunctionIamRole:
+#     Description: "Implicit IAM Role created for Hello World function"
+#     Value: !GetAtt NotesFunctionRole.Arn
+#   UsersApi:
+#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/users/"
+#   GetUserApi:
+#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/user/"
+#   UsersFunction:
+#     Description: "Hello World Lambda Function ARN"
+#     Value: !GetAtt UsersFunction.Arn
+#   UsersFunctionIamRole:
+#     Description: "Implicit IAM Role created for Hello World function"
+#     Value: !GetAtt UsersFunctionRole.Arn

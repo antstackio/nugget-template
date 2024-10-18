@@ -3,7 +3,8 @@ import users from './users-module';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-        console.log(process.env.NODE_PATH)
+        console.log(JSON.stringify(event))
+        await users.initializeKnex();
         const user = await users.getUser(1);
         return {
             statusCode: 200,
