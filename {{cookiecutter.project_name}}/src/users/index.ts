@@ -5,11 +5,33 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     try {
         console.log(JSON.stringify(event))
         await users.initializeKnex();
-        const user = await users.getUser(1);
+
+        if (event.resource === '/user/new' && event.httpMethod === 'POST') {
+            const {username, email} = JSON.parse(event.body || '{}');
+            const newUserID = await users.addUser(username, email);
+            return {
+                statusCode: 200,
+                body: `created user with id ${newUserID}`,
+            };
+        }
+        if (event.resource === '/user/{id}' && event.httpMethod === 'GET') {
+            const id = event.pathParameters?.id;
+            if (!id) {
+                return {
+                    statusCode: 400,
+                    body: 'id is required',
+                };
+            }
+            const user = await users.getUser(parseInt(id));
+            return {
+                statusCode: 200,
+                body: JSON.stringify(user),
+            };
+        }
         return {
             statusCode: 200,
             body: JSON.stringify({
-                message: `hello ${user ? user.username : 'user'}!`,
+                message: `hello user!`,
             }),
         };
     } catch (err) {
